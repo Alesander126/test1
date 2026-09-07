@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Magazyn SKU</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <main class="shell">
+    <section id="configScreen" class="screen hidden">
+      <div class="card hero-card">
+        <h1>Magazyn SKU</h1>
+        <p>Brakuje konfiguracji Supabase. Uzupełnij plik <code>config.js</code>.</p>
+      </div>
+    </section>
+
+    <section id="loginScreen" class="screen hidden">
+      <div class="card login-card">
+        <div class="brand-mark">M</div>
+        <h1>Magazyn SKU</h1>
+        <p class="muted">Zaloguj się jako pracownik magazynu.</p>
+        <form id="loginForm" class="stack">
+          <label>E-mail<input id="loginEmail" type="email" autocomplete="username" required placeholder="pracownik@firma.pl" /></label>
+          <label>Hasło<input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••" /></label>
+          <button class="btn primary" type="submit">Zaloguj</button>
+        </form>
+        <p id="loginError" class="error"></p>
+      </div>
+    </section>
+
+    <section id="appScreen" class="screen hidden">
+      <header class="topbar">
+        <div><div class="eyebrow">MAGAZYN</div><strong id="userLabel">Pracownik</strong></div>
+        <button id="logoutBtn" class="icon-btn" aria-label="Wyloguj">↪</button>
+      </header>
+
+      <nav class="tabs" aria-label="Nawigacja">
+        <button class="tab active" data-view="home">Start</button>
+        <button class="tab" data-view="search">Szukaj</button>
+        <button class="tab" data-view="container">OZ</button>
+        <button class="tab" data-view="history">Historia</button>
+      </nav>
+
+      <div id="homeView" class="view">
+        <div class="grid-actions">
+          <button class="action-card" data-action="place"><span>📥</span><strong>Umieść produkt</strong><small>SKU → lokalizacja</small></button>
+          <button class="action-card" data-action="move"><span>↔️</span><strong>Przenieś produkt</strong><small>z regału na regał</small></button>
+          <button class="action-card" data-action="pick"><span>📤</span><strong>Zdejmij ze stanu</strong><small>wydanie / pobranie</small></button>
+          <button class="action-card" data-view="search"><span>🔎</span><strong>Znajdź produkt</strong><small>SKU / EAN / nazwa</small></button>
+        </div>
+        <div id="operationPanel" class="card hidden"></div>
+      </div>
+
+      <div id="searchView" class="view hidden">
+        <div class="card">
+          <div class="row gap"><input id="searchInput" class="grow" placeholder="SKU, EAN lub nazwa" /><button id="scanSearchBtn" class="btn">📷</button></div>
+          <button id="searchBtn" class="btn primary full">Szukaj</button>
+        </div>
+        <div id="searchResults" class="results"></div>
+      </div>
+
+      <div id="containerView" class="view hidden">
+        <div class="card">
+          <h2>Opakowania zbiorcze</h2>
+          <div class="row gap"><input id="containerCode" class="grow" placeholder="np. OZ-000124" /><button id="generateContainerBtn" class="btn">Generuj</button></div>
+          <button id="createContainerBtn" class="btn primary full">Utwórz / otwórz OZ</button>
+        </div>
+        <div id="containerWorkspace"></div>
+      </div>
+
+      <div id="historyView" class="view hidden">
+        <div class="card"><h2>Ostatnie operacje</h2><button id="refreshHistoryBtn" class="btn full">Odśwież</button></div>
+        <div id="historyResults" class="results"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="scannerDialog">
+    <div class="scanner-head"><strong>Skanuj kod</strong><button id="closeScannerBtn" class="icon-btn">✕</button></div>
+    <video id="scannerVideo" playsinline></video>
+    <p class="muted">Nakieruj aparat na EAN, Code128 lub QR.</p>
+    <div class="row gap"><input id="manualScanInput" class="grow" placeholder="lub wpisz kod" /><button id="manualScanBtn" class="btn primary">Użyj</button></div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
